@@ -1,0 +1,101 @@
+Depot (depotID, street, postcode, fax)
+Primary Key depotID
+
+
+DepotPhone (depotID, phone)
+Primary Key depotID, phone
+foreign key depotID references Depot(depotID) ON UPDATE CASCADE ON DELETE CASCADE
+
+
+Client (ClientID, street, postcode)
+Primary Key (ClientID)
+
+
+PersonalClient (ClientID, fName, lName, title, driversNum)
+Primary Key ClientID
+Foreign key ClientID references Client(ClientID) ON UPDATE CASCADE ON DELETE CASCADE
+
+
+CompanyClient(ClientID, cName, Representative_clientID)
+Primary Key ClientID
+Foreign key ClientID references Client(ClientID) ON UPDATE CASCADE ON DELETE CASCADE
+Foreign key Representative_clientID references PersonalClient(ClientID) ON UPDATE CASCADE ON DELETE RESTRICT
+
+
+Client Phone (ClientID, phone)
+Primary Key ClientID, phone
+Foreign Key ClientID references Client (ClientID) ON UPDATE CASCADE ON DELETE CASCADE
+
+
+VehicleType (mixID (INTEGER PRIMARY KEY AUTOINCREMENT), make, model, doors, body, VehicleTrim)
+Primary Key (mixID)
+
+
+Vehicle (mixID, regNum, depotID, fleetNum, colour, nextServDate, nextServKilom, nextServDepotID)
+Primary Key (regNum)
+Foreign Key (depotID) references Depot (depotID) ON UPDATE CASCADE ON DELETE RESTRICT
+Foreign Key (nextServDepotID) references Depot(DepotID) ON UPDATE CASCADE ON DELETE RESTRICT
+Foreign Key (mixID) references VehicleType(mixID) ON UPDATE CASCADE ON DELETE CASCADE
+
+
+
+ServiceHistory (regNum, depotID, date, cost, description)
+Primary Key (regNum, depotID, date)
+Foreign Key (regNum) references Vehicle (regNum) ON UPDATE CASCADE ON DELETE NO ACTION
+Foreign Key (depotID) references Depot (depotID) ON UPDATE CASCADE ON DELETE SET DEFAULT
+
+
+Booking (bookingID, ClientID, depotID, mixID, startDate, hireDays, colour)
+Primary Key (bookingID)
+Foreign Key (ClientID) references Client(ClientID) ON UPDATE CASCADE ON DELETE CASCADE
+Foreign Key (mixID) references VehicleType (mixID) ON UPDATE CASCADE ON  NO ACTION 
+Foreign Key (depotID) references Depot (depotID) ON UPDATE CASCADE ON DELETE NO ACTION
+
+
+HiredVehicle (regNum, mixID, tariffID, depotID, clientID, date, cardType, cardNo, kilometrage, days, policyNumber)
+Primary Key (regNum, date, clientID)
+Foreign Key (regNum) references Vehicle (regNum) ON UPDATE CASCADE ON DELETE NO ACTION
+Foreign Key (tariffID) references DailyTariff (tariffID) ON UPDATE CASCADE ON DELETE RESTRICT 
+Foreign Key (depotID) references Depot (depotID) ON UPDATE CASCADE ON DELETE SET DEFAULT
+Foreign Key (clientID) references Client (clientID) ON UPDATE CASCADE  ON DELETE CASCADE
+Foreign Key (mixID) references VehicleType (mixID) ON UPDATE CASCADE ON DELETE NO ACTION
+
+HiredVehicleDriver (regNum, date, clientID, DriverClientID)
+Primary Key (regNum, date, clientID, DriverClientID)
+Foreign Key (regNum, date, clientID) references HiredVehicle (regNum, date, clientID) ON UPDATE CASCADE ON DELETE RESTRICT
+Foreign Key (DriverClientID) references PersonalClient (clientID) ON UPDATE CASCADE ON DELETE RESTRICT
+
+
+DailyTariff (tariffID, conditions)
+Primary Key (tariffID)
+
+
+DailyTariffCost (mixID, tariffID, rentalPrice)
+Primary Key (mixID, tariffID)
+Foreign Key (mixID) references VehicleType (mixID) ON UPDATE CASCADE ON DELETE CASCADE
+Foreign Key (tariffID) references DailyTariff (tariffID) ON UPDATE CASCADE ON DELETE CASCADE
+
+
+Insurance (insuranceID, policyType, cost)
+Primary Key (insuranceID)
+
+
+InvoiceInfo (invoiceID, returnDate, qualityCheck, regNum, mixID, tariffID, clientID, datePaid)
+Primary Key (invoiceID)
+Foreign Key (regNum,higherDate,clientID) references hiredvehicle (regNum,date,clientID) ON UPDATE CASCADE ON DELETE NO ACTION
+
+Invoice (invoiceID, returnDate, qualityCheck, regNum, mixID, tariffID, clientID, datePaid,cost)
+Primary Key (invoiceID,cost)
+Foreign Key (regNum,higherDate,clientID) references hiredvehicle (regNum,date,clientID) ON UPDATE CASCADE ON DELETE NO ACTION
+
+
+Insures (policyNumber, insuranceID)
+Primary Key (policyNumber, insuranceID)
+Foreign Key (insuranceID) references Insurance(insuranceID) ON UPDATE CASCADE, ON DELETE RESTRICT
+Foreign Key (policyNumber) references HiredVehicle(policyNumber) ON UPDATE CASCADE ON DELETE CASCADE
+Foreign Key (higherDate) references HiredVehicle (date) ON UPDATE CASCADE ON DELETE RESTRICT
+
+Records (sum(days * (cost + rentalPrice)) as "RentalPrice", regNum, clientID, higherDate, policyNumber, tariffID)
+
+
+
