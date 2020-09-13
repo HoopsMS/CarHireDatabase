@@ -1,3 +1,11 @@
-This is repository is a basic car hire database created as part of a university assigment. <br>
-In it's current state it supports mulitple branches, buissnes and personal customers, more that one driver for each hire, car service history and basic billing frame work. 
-Additional functionality including final billing calculation and overdue notifcations could easily be added with more sql and a interface application.
+# Car Hire Database
+This repository is a basic Car Hire Database created as part of a University Assignment. 
+
+## Details
+This repository contains two major parts, the db.sql and Description.txt
+ - The db.sql contains the SQL code 
+ - The Description.txt contains the overall descriptions behind the entities and attributes that makeup the overall database.
+ 
+## Database Management System
+The Database was written in [SQLite3](https://www.sqlite.org/index.html).
+
