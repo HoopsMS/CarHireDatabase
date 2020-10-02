@@ -4,6 +4,7 @@ This repository is a basic Car Hire Database created as part of a University Ass
 ## Details
 This repository contains two major parts, the db.sql and Description.txt
  - The db.sql contains the SQL code 
+ - The dat.sql contains example data
  - The Description.txt contains the overall descriptions behind the entities and attributes that makeup the overall database.
  
 ## Database Management System
